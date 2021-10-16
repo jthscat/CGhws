@@ -46,6 +46,7 @@ var timeout=0;
 var pressed={};
 var soundTrack;
 var a;
+var begin=true;
 
 $('#toggle').mousedown(function(e){
      if ( pressed[e.which] ) return;
@@ -158,6 +159,10 @@ function stop(){
 
 function animate() {
    //angle+=0.01;
+   if(begin){
+   soundTrack.pause();
+   begin=!begin;
+  }
   var dt=clock.getDelta();
   //console.log(dt);
   if(turn&&mode1&&angle>0)
