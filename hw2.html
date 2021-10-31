@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+<style>
+#info {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  color: #ffff00
+}
+
+body {
+  overflow: hidden;
+}
+
+
+</style>
+</head>
+
+<body> 
+<div id="info">HW2
+</div>
+<script src="https://threejs.org/build/three.min.js"></script>
+<script src="https://threejs.org/examples/js/controls/OrbitControls.js">
+</script>
+<script src="https://jyunming-chen.github.io/tutsplus/js/KeyboardState.js"></script>
+
+<script>
+var camera, scene, renderer;
+var keyboard = new KeyboardState();
+var clock;
+var car;
+var body;
+var Pillar1, Pillar2, Pillar3;
+var pos = new THREE.Vector3();
+var vel = new THREE.Vector3();
+var force = new THREE.Vector3();
+var power, angle;
+var collision1 = false,
+  collision2 = false,
+  collision3 = false;
+var ncollision1 = false,
+  ncollision2 = false,
+  ncollision3 = false;
+
+(function() {
+  Math.clamp = function(val, min, max) {
+    return Math.min(Math.max(val, min), max);
+
+  }
+})();
+
+init();
+animate();
+
+function buildVehicle() {
+  var car = new THREE.Object3D();
+  var mat = new THREE.MeshPhongMaterial();
+  var mat2 = new THREE.MeshPhongMaterial({
+    color: 0x000000
+  });
+  var mat3 = new THREE.MeshPhongMaterial({
+    side: THREE.DoubleSide
+  });
+
+  body = new THREE.Mesh(new THREE.PlaneGeometry(9, 1, 4), mat3);
+  body.position.y = 1.5;
+  car.add(body);
+  var pointer = new THREE.Mesh(new THREE.BoxGeometry(2, 5, 2), mat);
+  car.add(pointer);
+  pointer.position.x = 3.4;
+  pointer.position.y = 4.5;
+
+  var handle = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 4, 32), mat2);
+  car.add(handle);
+  handle.position.x = 3.4;
+  handle.position.y = 5.5;
+  handle.rotation.x = Math.PI / 2;
+
+  var body2 = new THREE.Mesh(new THREE.BoxGeometry(3.5, 3, 3.9), mat);
+  car.add(body2);
+  body2.position.y = 3.5;
+  body2.position.x = -2.5;
+
+  var tire = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 2, 32), mat2);
+  car.add(tire);
+  tire.position.x = 3;
+  tire.position.y = 1;
+  tire.rotation.x = Math.PI / 2;
+
+  var tire2 = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 2, 32), mat2);
+  car.add(tire2);
+  tire2.position.x = -3;
+  tire2.position.y = 1;
+  tire2.rotation.x = Math.PI / 2;
+
+
+  return car;
+}
+
+function init() {
+
+  clock = new THREE.Clock();
+  scene = new THREE.Scene();
+
+  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+  camera.position.set(0, 200, 250);
+  scene.add(camera);
+
+  camera2 = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+  camera2.position.set(-10, 10, 0);
+  scene.add(camera2);
+
+
+  const light = new THREE.PointLight(0xffffff, 1);
+  light.position.set(20, 20, 10);
+  scene.add(light);
+
+  const P1 = new THREE.CylinderGeometry(5, 5, 20, 32);
+  const material = new THREE.MeshPhongMaterial({
+    color: 0x3DFFFF
+  });
+  Pillar1 = new THREE.Mesh(P1, material);
+  Pillar1.position.set(50, 10, 20);
+  scene.add(Pillar1);
+
+  const P2 = new THREE.CylinderGeometry(2, 2, 20, 32);
+  Pillar2 = new THREE.Mesh(P2, material);
+  Pillar2.position.set(-20, 10, 60);
+  scene.add(Pillar2);
+
+  const P3 = new THREE.CylinderGeometry(4, 4, 20, 32);
+  Pillar3 = new THREE.Mesh(P3, material);
+  Pillar3.position.set(30, 10, -50);
+  scene.add(Pillar3);
+
+
+
+
+
+  var gridXZ = new THREE.GridHelper(200, 20, 'red', 'white');
+  scene.add(gridXZ);
+
+  renderer = new THREE.WebGLRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setClearColor(0x888888);
+
+  var controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+  // disable OrbitControl keys
+  controls.enableKeys = false;
+
+  document.body.appendChild(renderer.domElement);
+  ////////////////////////////////////////////////////////////////////////
+  power = 3.0;
+  angle = 0.0;
+
+  car = buildVehicle();
+  scene.add(car);
+
+
+
+  renderer.autoClear = false;
+}
+
+function update(dt) {
+
+
+  keyboard.update();
+
+  if (vel.length() > 0) {
+    angle = 1.5 * Math.PI + Math.atan2(vel.x, vel.z);
+  }
+
+  if (keyboard.pressed("space"))
+    power = 0.1;
+  if (keyboard.pressed("up"))
+    if (power > 0)
+      power *= 1.2;
+    else if (power == 0) {
+    if (collision1 === false && collision2 === false && collision3 === false) {
+      power += 5;
+    } else {
+      power = 0;
+    }
+  } else
+    power += 5;
+
+
+  if (keyboard.pressed("down"))
+    if (power > 2)
+      power /= 1.2;
+    else if (power == 0) {
+    if (ncollision1 === false && ncollision2 === false && ncollision3 === false) {
+      power -= 5;
+    } else {
+      power = 0;
+    }
+  } else
+    power -= 5;
+
+
+  power = Math.clamp(power, -20, 80.0);
+
+
+  var angle_thrust = angle;
+  if (keyboard.pressed("left"))
+    angle_thrust += 0.5;
+  if (keyboard.pressed("right"))
+    angle_thrust -= 0.5;
+
+  // compute force
+  var thrust = new THREE.Vector3(1, 0, 0).multiplyScalar(Math.abs(power)).applyAxisAngle(new THREE.Vector3(0, 1, 0), angle_thrust);
+  force.copy(thrust);
+  force.add(vel.clone().multiplyScalar(-2))
+
+  // eulers
+  if (power == 0) {
+    vel.add(force.clone().multiplyScalar(dt));
+    pos.add(vel.clone().multiplyScalar(0).multiplyScalar(dt));
+  } else if (power < 0) {
+    vel.add(force.clone().multiplyScalar(dt));
+    pos.add(vel.clone().multiplyScalar(-1).multiplyScalar(dt));
+  } else {
+    vel.add(force.clone().multiplyScalar(dt));
+    pos.add(vel.clone().multiplyScalar(dt));
+  }
+
+}
+
+function animate() {
+
+  camera2.position.copy(car.valueOf().localToWorld(new THREE.Vector3(-30, 15, 0)));
+  camera2.lookAt(car.position);
+  var dt = clock.getDelta();
+
+  let Rect = makeRect(body);
+
+  if (Check_Intersect(Rect, Pillar1, 5) && power < 0) {
+    if (collision1 != true) {
+      power = 0;
+      ncollision1 = true;
+    }
+  } else if (Check_Intersect(Rect, Pillar1, 5) && power > 0) {
+    if (ncollision1 != true) {
+      power = 0;
+      collision1 = true;
+    }
+  }
+
+
+  if (Check_Intersect(Rect, Pillar2, 2) && power < 0) {
+    if (collision2 != true) {
+      power = 0;
+      ncollision2 = true;
+    }
+  } else if (Check_Intersect(Rect, Pillar2, 2) && power > 0) {
+    if (ncollision2 != true) {
+      power = 0;
+      collision2 = true;
+    }
+  }
+
+
+  if (Check_Intersect(Rect, Pillar3, 4) && power < 0) {
+    if (collision3 != true) {
+      power = 0;
+      ncollision3 = true;
+    }
+  } else if (Check_Intersect(Rect, Pillar3, 4) && power > 0) {
+    if (ncollision3 != true) {
+      power = 0;
+      collision3 = true;
+    }
+  }
+
+  if (!Check_Intersect(Rect, Pillar1, 5) && !Check_Intersect(Rect, Pillar2, 2) && !Check_Intersect(Rect, Pillar3, 4)) {
+    collision1 = false;
+    collision2 = false;
+    collision3 = false;
+    ncollision1 = false;
+    ncollision2 = false;
+    ncollision3 = false;
+  }
+
+  update(dt);
+  // car update
+  car.position.copy(pos);
+  car.rotation.y = angle;
+
+
+  requestAnimationFrame(animate);
+  render();
+}
+
+function makeRect(rect) {
+  let Rect = {};
+  Rect.max = car.localToWorld(new THREE.Vector3(4.5, 0, 2));
+  Rect.min = car.localToWorld(new THREE.Vector3(-4.5, 0, -2));
+  Rect.px = car.localToWorld(new THREE.Vector3(1, 0, 0)).sub(car.position);
+  return Rect;
+}
+
+function Check_Intersect(Rect, C, Rad) {
+  const Rad2 = Rad * Rad;
+
+  let xHat = Rect.px;
+  let zHat = xHat.clone().cross(new THREE.Vector3(0, 1, 0)).normalize();
+
+  let R = {
+    max: {
+      x: 0,
+      z: 0
+    },
+    min: {
+      x: 0,
+      z: 0
+    }
+  };
+  let cp = Rect.max.clone().sub(C.position);
+  R.max.x = cp.dot(xHat), R.max.z = cp.dot(zHat);
+
+  cp = Rect.min.clone().sub(C.position);
+  R.min.x = cp.dot(xHat), R.min.z = cp.dot(zHat);
+
+  if (R.max.x < 0) /* R to left of circle center */
+    if (R.max.z < 0) /* R in lower left corner */
+      return ((R.max.x * R.max.x + R.max.z * R.max.z) < Rad2);
+    else if (R.min.z > 0) /* R in upper left corner */
+    return ((R.max.x * R.max.x + R.min.z * R.min.z) < Rad2);
+  else /* R due West of circle */
+    return (Math.abs(R.max.x) < Rad);
+  else if (R.min.x > 0) /* R to right of circle center */
+    if (R.max.z < 0) /* R in lower right corner */
+      return ((R.min.x * R.min.x + R.max.z * R.max.z) < Rad2);
+    else if (R.min.z > 0) /* R in upper right corner */
+    return ((R.min.x * R.min.x + R.min.z * R.min.z) < Rad2);
+  else /* R due East of circle */
+    return (R.min.x < Rad);
+  else /* R on circle vertical centerline */
+    if (R.max.z < 0) /* R due South of circle */
+      return (Math.abs(R.max.z) < Rad);
+    else if (R.min.z > 0) /* R due North of circle */
+    return (R.min.z < Rad);
+  else /* R contains circle centerpoint */
+    return (true);
+}
+
+function render() {
+
+  var WW = window.innerWidth;
+  var HH = window.innerHeight;
+
+  renderer.clear();
+
+  renderer.setViewport(0, 0, WW / 2, HH);
+  camera.aspect = WW / 2 / HH;
+  camera.updateProjectionMatrix();
+  renderer.render(scene, camera);
+  //renderer.render(sceneHUD, cameraHUD);
+
+  renderer.setViewport(WW / 2, 0, WW / 2, HH);
+  renderer.render(scene, camera2);
+
+
+  //renderer.render(sceneHUD, cameraHUD);
+
+
+}
+
+</script>
+</body>
+
+</html>
