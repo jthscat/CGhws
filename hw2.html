@@ -29,7 +29,10 @@ body {
 </script>
 <script src="https://jyunming-chen.github.io/tutsplus/js/KeyboardState.js"></script>
 
-<script>
+<script type="module">
+import * as THREE from "https://threejs.org/build/three.module.js";
+import {makeRect} from "./hw2-2.js";
+
 var camera, scene, renderer;
 var keyboard = new KeyboardState();
 var clock;
@@ -297,13 +300,7 @@ function animate() {
   render();
 }
 
-function makeRect(rect) {
-  let Rect = {};
-  Rect.max = car.localToWorld(new THREE.Vector3(4.5, 0, 2));
-  Rect.min = car.localToWorld(new THREE.Vector3(-4.5, 0, -2));
-  Rect.px = car.localToWorld(new THREE.Vector3(1, 0, 0)).sub(car.position);
-  return Rect;
-}
+
 
 function Check_Intersect(Rect, C, Rad) {
   const Rad2 = Rad * Rad;
