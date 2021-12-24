@@ -22,7 +22,7 @@ function init() {
   camera.position.y=60;
   camera.position.z = 150;
 
-	let controls = new OrbitControls(camera,renderer.domElement);
+   let controls = new OrbitControls(camera,renderer.domElement);
    controls.minPolarAngle=THREE.Math.degToRad(50);
    controls.maxPolarAngle=THREE.Math.degToRad(60);
    controls.minDistance=100;
