@@ -1,5 +1,5 @@
 import * as THREE from "https://threejs.org/build/three.module.js";
-import {scence}from "./main.js";
+import {scene} from "./main.js";
 
 var pickables=[];
 

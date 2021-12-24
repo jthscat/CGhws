@@ -58,5 +58,5 @@ function animate() {
   
 }
 
-export{camera,scene,renderer,mouse,candles};
+export{camera,scene,renderer,raycaster,mouse,candles};
 export{init,animate};

@@ -1,5 +1,5 @@
-import{camera,scene,renderer,mouse,raycaster,candles}from "./main.js";
-import{pickables}from "./candle.js";
+import {camera,scene,renderer,mouse,raycaster,candles} from "./main.js";
+import {pickables}from "./candle.js";
 
 
 function onWindowResize() {
