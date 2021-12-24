@@ -22,11 +22,11 @@ function init() {
   camera.position.y=60;
   camera.position.z = 150;
 
-	let controls = new THREE.OrbitControls (camera, renderer.domElement);
+	let controls = new OrbitControls(camera,renderer.domElement);
    controls.minPolarAngle=THREE.Math.degToRad(50);
    controls.maxPolarAngle=THREE.Math.degToRad(60);
    controls.minDistance=100;
- 	 controls.maxDistance=150;
+   controls.maxDistance=150;
    
    let floor = new THREE.Mesh(new THREE.PlaneGeometry(300,300),new THREE.MeshPhongMaterial());
    floor.rotation.x=-Math.PI/2;
