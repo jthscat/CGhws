@@ -21,7 +21,7 @@ class mycandle{
    body.position.y=10;
    
    this.spotLight = new THREE.SpotLight( 0xffffff );
-	 this.candle.add(this.spotLight);
+   this.candle.add(this.spotLight);
    this.spotLight.angle = Math.PI/4;
    this.spotLight.position.y = 15;
    this.spotLight.target = body;
