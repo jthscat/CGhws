@@ -1,6 +1,6 @@
 import * as THREE from "https://threejs.org/build/three.module.js";
 import { OrbitControls } from "https://threejs.org/examples/jsm/controls/OrbitControls.js";
-import {mycandle} from "./Candle.js";
+import {mycandle} from "./candle.js";
 import {pickevent,onWindowResize,render} from "./others.js";
 
 var candles=[];
