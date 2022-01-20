@@ -80,7 +80,7 @@ function init() {
 		var geometry = new TeapotGeometry (10);
         var mesh = new THREE.Mesh(geometry, meshMaterial);
 		mesh.position.set(j,0,i);
-		teapots.push(mesh)
+		teapot.push(mesh)
 		scene.add(mesh);
 	  }
 	}
