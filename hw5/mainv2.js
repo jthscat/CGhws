@@ -85,6 +85,9 @@ function init() {
 	    geometry.computeBoundingSphere();
 	    imposterRadius = geometry.boundingSphere.radius;
 		
+	mesh = new THREE.Mesh(geometry, meshMaterial);
+		sceneRTT.add(mesh);	
+		
 	 renderTarget = new THREE.WebGLRenderTarget(
           1024, 1024, {
           minFilter: THREE.LinearFilter,
