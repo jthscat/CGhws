@@ -77,7 +77,7 @@ function init() {
 
     for(var i = -135; i <= 135; i+=30){
 	  for(var j = 135; j >= -135; j-=30){
-		var geometry = new TeapotGeometry (10);
+		var geometry = new TeapotGeometry (7);
         var mesh = new THREE.Mesh(geometry, meshMaterial);
 		mesh.position.set(j,0,i);
 		teapot.push(mesh)

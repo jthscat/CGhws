@@ -1,4 +1,4 @@
-import {scene,camera,renderer} from "./main2.js";
+import {scene,camera,renderer} from "./mainv2.js";
 
 function render() {
     renderer.render(scene, camera);
