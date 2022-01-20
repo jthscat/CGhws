@@ -40,7 +40,7 @@ function init() {
     scene.add(ambientLight);
 
  
-    let meshMaterial = new THREE.ShaderMaterial({
+    meshMaterial = new THREE.ShaderMaterial({
         uniforms: {
         lightpos: {type: 'v3', value: new THREE.Vector3()}
         },
@@ -75,9 +75,9 @@ function init() {
 		].join("\n")
     });
 
-    for(var i = -90; i <= 90; i+=20){
-	  for(var j = 90; j >= -90; j-=20){
-		var geometry = new TeapotGeometry (6);
+    for(var i = -135; i <= 135; i+=30){
+	  for(var j = 135; j >= -135; j-=30){
+		var geometry = new TeapotGeometry (10);
         var mesh = new THREE.Mesh(geometry, meshMaterial);
 		mesh.position.set(j,0,i);
 		teapot.push(mesh)

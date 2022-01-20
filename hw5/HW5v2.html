@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+<style>
+body {
+    background-color: #fff;
+    color: #111;
+    margin: 0px;
+    overflow: hidden;
+    font-family: Monospace;
+    font-size: 10px;
+    position: absolute;
+}
+#info {
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    padding: 5px;
+    text-align: center;
+    color: #ffff00
+}
+
+</style>
+</head>
+
+<body> 
+<div id="info">HW5 Version2</div>
+<script type = "module">
+import {init,animate} from "./mainv2.js";
+javascript:(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='https://mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()
+
+init();
+animate();
+
+
+</script>
+</body>
+
+</html>
