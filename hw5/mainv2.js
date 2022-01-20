@@ -81,7 +81,7 @@ function init() {
 		].join("\n")
     });
 	
-	var geometry = new TeapotGeometry (7);
+	var geometry = new TeapotGeometry (10);
 	    geometry.computeBoundingSphere();
 	    imposterRadius = geometry.boundingSphere.radius;
 		
