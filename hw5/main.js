@@ -23,7 +23,7 @@ function init() {
     scene = new THREE.Scene();
 
     camera = new THREE.PerspectiveCamera(45,window.innerWidth /window.innerHeight,0.1,10000);
-    camera.position.y = 220;
+    camera.position.y = 160;
     camera.position.z = 400;
 	
 	window.addEventListener('resize', onWindowResize,false);
@@ -77,7 +77,7 @@ function init() {
 
     for(var i = 0; i <= 200; i+=20){
 	  for(var j = 200; j >= 0; j-=20){
-		var geometry = new TeapotGeometry (10);
+		var geometry = new TeapotGeometry (6);
         var mesh = new THREE.Mesh(geometry, meshMaterial);
 		mesh.position.set(j,0,i);
 		teapot.push(mesh)
