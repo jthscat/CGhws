@@ -129,7 +129,7 @@ function init() {
 	  for(var j = 135; j >= -135; j-=30){
 		var quad = new THREE.Mesh(plane,rttmaterial);
 		quad.position.set(j,0,i);
-		teapots.push(quad);
+		teapot.push(quad);
 		scene.add(quad);
 	  }
 	}
@@ -160,7 +160,7 @@ function init() {
     renderer.setRenderTarget(null);
     renderer.setClearColor(0x888888);
     renderer.render(scene, camera);
-    teapots.forEach(function (b){b.lookAt(camera.position);});
+    teapot.forEach(function (a){a.lookAt(camera.position);});
 	//quad.lookAt (camera.position);
 	
     requestAnimationFrame(animate);
